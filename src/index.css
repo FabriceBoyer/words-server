@@ -63,3 +63,15 @@ h1 {
   border-radius: 5px;
   border: 1px solid #ccc;
 }
+
+/* Style the word list container */
+.word-list-container {
+  width: 100%;             /* Make the list fill the container */
+  max-width: 500px;        /* Set a max-width for the list */
+  overflow-y: auto;        /* Allow scrolling if content exceeds the height */
+  max-height: 70vh;        /* Limit the height to 70% of the viewport height */
+}
+
+/* Style individual word items */
+.word-item {
+}
