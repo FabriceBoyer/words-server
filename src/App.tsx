@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
-import wordsData from "./data/database_lemma.generated.json";
+import * as wordsData from "./data/database_lemma.generated.json";
 
 interface Record {
   [name: string]: Word;
 }
 interface Word {
-  ref: string;
+  ref: string | null;
   char: string;
   backlinks: string[];
 }
@@ -18,9 +18,8 @@ const CharSequenceSearch = () => {
 
   useEffect(() => {
     const loadWords = () => {
-      const wordsDatabase = JSON.parse(JSON.stringify(wordsData));
-      setSequences(wordsDatabase);
-      console.log(Object.keys(wordsDatabase).length + " words loaded");
+      setSequences(wordsData as Record);
+      console.log(Object.keys(wordsData).length + " words loaded");
     };
 
     loadWords();
