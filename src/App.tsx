@@ -2,11 +2,17 @@ import { useState, useEffect } from "react";
 
 import wordsData from "./data/database_lemma.generated.json";
 
+interface Record {
+  [name: string]: Word;
+}
+interface Word {
+  ref: string;
+  char: string;
+  backlinks: string[];
+}
 const CharSequenceSearch = () => {
   const [query, setQuery] = useState("");
-  const [sequences, setSequences] = useState<
-    Record<string, { backlinks: string[] }>
-  >({});
+  const [sequences, setSequences] = useState<Record>({});
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
@@ -22,18 +28,17 @@ const CharSequenceSearch = () => {
   }, []); // Empty dependency array ensures this runs once on mount
 
   useEffect(() => {
+    setHighlightedIndex(-1);
     if (query in sequences) {
       var backlinks = sequences[query].backlinks;
-      while (backlinks.length == 1) {
-        let new_backlinks = sequences[backlinks[0]].backlinks;
-        if (new_backlinks.length == 0) break;
-        backlinks = new_backlinks;
+      if (backlinks.length == 1) {
+        setQuery(backlinks[0]);
+        return;
       }
       setSuggestions(backlinks);
     } else {
       setSuggestions([]);
     }
-    setHighlightedIndex(-1);
   }, [query, sequences]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -45,7 +50,6 @@ const CharSequenceSearch = () => {
       setQuery(suggestions[highlightedIndex]);
       setSuggestions([]);
     }
-    console.log("index is " + highlightedIndex);
   };
 
   return (
@@ -62,7 +66,7 @@ const CharSequenceSearch = () => {
       <div className="word-list">
         {suggestions.length === 0 ? (
           <div style={{ textAlign: "center" }}>
-            <p>No words found</p>
+            <p>No suggestion found</p>
           </div>
         ) : (
           suggestions.map((item, index) => (
