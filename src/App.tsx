@@ -69,7 +69,7 @@ const CharSequenceSearch = () => {
             <div
               key={item}
               className={`word-item ${
-                highlightedIndex === index ? "highlighted" : ""
+                highlightedIndex === index ? "highlight" : ""
               }`}
               onClick={() => setQuery(item)}
             >
