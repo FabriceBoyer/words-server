@@ -19,7 +19,6 @@ const CharSequenceSearch = () => {
   useEffect(() => {
     const loadWords = () => {
       const wordsDatabase = JSON.parse(JSON.stringify(wordsData));
-
       setSequences(wordsDatabase);
       console.log(Object.keys(wordsDatabase).length + " words loaded");
     };
@@ -37,6 +36,7 @@ const CharSequenceSearch = () => {
       }
       setSuggestions(backlinks);
     } else {
+      setQuery(query.substring(0, query.length - 1)); // wrong words refused
       setSuggestions([]);
     }
   }, [query, sequences]);
