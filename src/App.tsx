@@ -31,7 +31,7 @@ const CharSequenceSearch = () => {
       var backlinks: string[] = word.backlinks;
       var expandedBacklinks = expandBacklinks(backlinks);
       setSuggestions(expandedBacklinks);
-      setHighlightedIndex(0);
+      setHighlightedIndex(expandedBacklinks.length > 0 ? 0 : -1);
     } else {
       if (query.length > 0) {
         setQuery(prevQuery); // wrong words refused
@@ -48,9 +48,11 @@ const CharSequenceSearch = () => {
     backlinks.forEach((b) => {
       var word: Word | undefined = sequences.find((w) => w.id === b);
       while (word != undefined && word.backlinks.length == 1) {
-        word = sequences.find((w) => w.id === word.backlinks[0]);
+        word = sequences.find(
+          (w) => word != undefined && w.id === word.backlinks[0]
+        );
       }
-      if (!expandedBacklinks.includes(word.id)) {
+      if (word != undefined && !expandedBacklinks.includes(word.id)) {
         expandedBacklinks.push(word.id);
       }
     });
@@ -63,10 +65,6 @@ const CharSequenceSearch = () => {
       ref.current = value;
     }, [value]);
     return ref.current;
-  }
-
-  function clamp(num: number, lower: number, upper: number) {
-    return Math.min(Math.max(num, lower), upper);
   }
 
   function clampHighlightedIndex(value: number) {
