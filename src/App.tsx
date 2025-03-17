@@ -1,35 +1,35 @@
 import { useState, useEffect } from "react";
 
-import * as wordsData from "./data/database_lemma.generated.json";
+import wordsData from "./data/database_lemma.generated.json";
 
-interface Record {
-  [name: string]: Word;
-}
 interface Word {
-  ref: string | null;
-  char: string;
+  id: string;
+  root_ref: string | null;
+  leaf_char: string;
   backlinks: string[];
 }
 const CharSequenceSearch = () => {
   const [query, setQuery] = useState("");
-  const [sequences, setSequences] = useState<Record>({});
+  const [sequences, setSequences] = useState<Word[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
   useEffect(() => {
     const loadWords = () => {
-      setSequences(wordsData as Record);
-      console.log(Object.keys(wordsData).length + " words loaded");
+      const wordsDataBase: Word[] = wordsData as Word[];
+      setSequences(wordsDataBase);
+      console.log(wordsDataBase.length + " words loaded");
     };
-
     loadWords();
   }, []); // Empty dependency array ensures this runs once on mount
 
   useEffect(() => {
     setHighlightedIndex(-1);
-    if (query in sequences) {
-      var backlinks = sequences[query].backlinks;
+    var word = sequences.find((w) => w.id === query);
+    if (word) {
+      var backlinks = word.backlinks;
       if (backlinks.length == 1) {
+        // complete more than one char
         setQuery(backlinks[0]);
         return;
       }
@@ -62,6 +62,9 @@ const CharSequenceSearch = () => {
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
       />
+      {/* <button className="" onClick={() => setQuery("")}>
+        Clear
+      </button> */}
       <div className="word-list">
         {suggestions.length === 0 ? (
           <div style={{ textAlign: "center" }}>
