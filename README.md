@@ -1,6 +1,8 @@
-# Acronyms server
+# Words server
 
-Data comes from [NASA-Acronyms](https://github.com/nasa/NASA-Acronyms) github repository
+Data comes from:
+- https://github.com/michmech/lemmatization-lists
+- https://github.com/dwyl/english-words
 
 Resulting application served on github pages at https://fabriceboyer.github.io/words-server
 
