@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
-import wordsData from "./data/database_lemma.generated.json";
+import * as fflate from "fflate";
 
 interface Word {
   id: string;
@@ -17,8 +16,15 @@ const CharSequenceSearch = () => {
   const prevQuery = usePrevious(query);
 
   useEffect(() => {
-    const loadWords = () => {
-      const wordsDataBase: Word[] = wordsData as Word[];
+    const loadWords = async () => {
+      // load bz2 compressed json into memory
+      const compressedFetch = await fetch(
+        "./data/database_lemma.generated.json.gz"
+      ).then((res) => res.arrayBuffer());
+      const compressed = new Uint8Array(compressedFetch);
+      const decompressed = fflate.decompressSync(compressed);
+      const decompressedString = fflate.strFromU8(decompressed);
+      const wordsDataBase: Word[] = JSON.parse(decompressedString) as Word[];
       setSequences(wordsDataBase);
       console.log(wordsDataBase.length + " words loaded");
     };

@@ -1,4 +1,5 @@
 import bz2
+import gzip
 import json
 import os
 
@@ -71,8 +72,8 @@ def main():
     print(f"Output written to {output_file}")
     print(f"Output file size: {os.path.getsize(output_file) / 1024 / 1024:.2f} MB")
 
-    compressed_output_file = output_file + ".bz2"
-    with bz2.BZ2File(compressed_output_file, "w") as f:
+    compressed_output_file = output_file + ".gz"
+    with gzip.GzipFile(compressed_output_file, "w") as f:
         f.write(open(output_file, "rb").read())
     print(f"Compressed output written to {compressed_output_file}")
     print(
